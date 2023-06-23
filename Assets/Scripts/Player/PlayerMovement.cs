@@ -21,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask wall;
     public LayerMask spring;
 
+    private Vector2 halfBottomHitboxCenter;
+    private Vector2 halfBottomHitboxSize;
 
     public bool facingLeft = false;
     public bool isAirborne;
@@ -65,6 +67,7 @@ public class PlayerMovement : MonoBehaviour
         gravityScale = rb.gravityScale;
         dashLeft = dashNumber;
         staminaLeft = maxStamina;
+
     }
 
     void Update()
@@ -87,6 +90,10 @@ public class PlayerMovement : MonoBehaviour
         keyJump = FixedUpdateKeyState(tempKeyJump, keyJump);
         keyDash = FixedUpdateKeyState(tempKeyDash, keyDash);
         keyGrab = FixedUpdateKeyState(tempKeyGrab, keyGrab);
+
+        //Update half hitbox
+        halfBottomHitboxCenter = new Vector2(coll.bounds.center.x, coll.bounds.center.y - coll.bounds.size.y / 4);
+        halfBottomHitboxSize = new Vector2(coll.bounds.size.x, coll.bounds.size.y / 2);
 
         if (!deathResp.dead) //Player can't act if dead
         {
@@ -205,7 +212,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Check if player can slide
-        if (dirX == tempDir.x /*Same direction than input*/ && Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, tempDir, .0625f, wall) && !IsGrounded() && rb.velocity.y < 0f)
+        if (dirX == tempDir.x /*Same direction than input*/ && Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, tempDir, .0625f, wall) && !IsGrounded() && rb.velocity.y < 0f)
         {
             slidingOnWall = true;
         }
@@ -287,7 +294,7 @@ public class PlayerMovement : MonoBehaviour
                 grabDirection = Vector2.right;
             }
 
-            if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, grabDirection, .0625f, wall)) //Checking for a wall to grab
+            if (Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, grabDirection, .0625f, wall)) //Checking for a wall to grab
             {
                 wallGrabbed = true; //Successfully grabbed a wall
 
