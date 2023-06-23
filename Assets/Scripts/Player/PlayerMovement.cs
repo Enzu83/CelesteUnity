@@ -43,9 +43,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public int dashNumber = 1;
     [SerializeField] private int dashDuration = 8;
     [SerializeField] private float dashSpeed = 18f;
+    [SerializeField] private float waveDashFactor;
+    [SerializeField] private bool isWaveDashing = false;
     [SerializeField] private GameObject phantomMadeline;
     private Vector2 dashDirection = Vector2.zero;
-    [HideInInspector] public int dashState = 0;
+    public int dashState = 0;
     [HideInInspector] public int dashLeft;
     [HideInInspector] public bool isDashing = false;
 
@@ -67,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
         gravityScale = rb.gravityScale;
         dashLeft = dashNumber;
         staminaLeft = maxStamina;
-
     }
 
     void Update()
@@ -105,6 +106,10 @@ public class PlayerMovement : MonoBehaviour
 
             DashCheck();
 
+            UpdateWaveDash();
+
+            UpdateBoost();
+
             UpdateGravity();
 
             UpdateVelocity();
@@ -115,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void UpdateVelocity()
     {
-        if (!isDashing && !wallGrabbed && !slidingOnWall) //Can't move freely if dashing or grabbing a wall
+        if (!isDashing && !isWaveDashing && !wallGrabbed && !slidingOnWall) //Can't move freely if dashing or grabbing a wall
         {
             //Horizontal Movement
 
@@ -125,7 +130,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
                 }
-                else if ((Mathf.Abs(rb.velocity.x) < moveSpeed && dirX != 0)) //Horizontal movement in the air
+                else if (Mathf.Abs(rb.velocity.x) < moveSpeed && dirX != 0) //Horizontal movement in the air
                 {
                     float horizontalVelocity;
                     horizontalVelocity = rb.velocity.x + dirX * moveSpeed / 8;
@@ -143,11 +148,12 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (boostedVelocity) //Horizontal Movement when player is boosted (e.g. by moving platform)
             {
-                if (IsGrounded())
+                if (IsGrounded() && !isWaveDashing)
                 {
                     boostedVelocity = false; //Reset boost
                     rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
                     boostedTimer = 0;
+
                 }
                 else if (boostedTimer == 0 && dirX != 0) //Horizontal movement in the air
                 {
@@ -167,23 +173,10 @@ public class PlayerMovement : MonoBehaviour
                         rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
                     }
                 }
-
-                if (boostedTimer > 0) //Timer before player can act
-                {
-                    boostedTimer--;
-                }
-                else
-                {
-                    boostedTimer = 0;
-                    if (!keepVelocityAfterBoost)
-                    {
-                        boostedVelocity = false;
-                    }
-                }
             }
         }
 
-        if (keyJump == KeyState.Down && IsGrounded() && !wallGrabbed && !slidingOnWall) //Jump detection
+        if (keyJump == KeyState.Down && IsGrounded() && !isDashing && !wallGrabbed && !slidingOnWall) //Jump detection
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
 
@@ -394,34 +387,102 @@ public class PlayerMovement : MonoBehaviour
         {
             if (dashState > 0) //Dash timer check
             {
-                if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, dashDirection.x * Vector2.right, .1f, wall)) //Check if a wall is in the X-direction
+                //Wavedash check
+                if (IsGrounded() && keyJump == KeyState.Down && dashDirection.x != 0)
                 {
-                    rb.velocity = new Vector2(0f, rb.velocity.y); //Stop horizontal movement if hitting a wall
+                    float tempSpeedX;
+                    if (facingLeft)
+                    {
+                        tempSpeedX = -waveDashFactor * moveSpeed;
+                    }
+                    else
+                    {
+                        tempSpeedX = waveDashFactor * moveSpeed;
+                    }
+
+
+                    //Check wavedash efficiency
+                    float midDuration = dashDuration / 2;
+
+                    if (dashDirection.y != 0 && Mathf.Abs(dashState - midDuration) <= 2) //Restore dash if wavedash is efficient
+                    {
+                        dashLeft = dashNumber;
+                    }
+
+                    if (dashDirection.y == 0 && dashDuration - dashState > 5) //Restore dash condition when performed on ground
+                    {
+                        dashLeft = dashNumber;
+                    }
+
+                    if (dashDirection.y == 0 && dashState < dashDuration - 2) //Horizontal speed effiency
+                    {
+                        float reduceFactor;
+                        reduceFactor = 0.6f + 0.4f * 1 / 3 * Mathf.Max(0, 5 - Mathf.Abs(dashDuration - midDuration));
+                        tempSpeedX *= reduceFactor;
+                    }
+
+                    dashState = 0;
+
+                    SetBoost(8, new Vector2(tempSpeedX, jumpForce), true);
+                    isWaveDashing = true;
                 }
-                if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, dashDirection.y * Vector2.up, .1f, wall)) //Check if a wall is in the X-direction
+                else
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, 0f); //Stop vertical movement if hitting a wall
+                    if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, dashDirection.x * Vector2.right, .1f, wall)) //Check if a wall is in the X-direction
+                    {
+                        rb.velocity = new Vector2(0f, rb.velocity.y); //Stop horizontal movement if hitting a wall
+                    }
+                    if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, dashDirection.y * Vector2.up, .1f, wall)) //Check if a wall is in the X-direction
+                    {
+                        rb.velocity = new Vector2(rb.velocity.x, 0f); //Stop vertical movement if hitting a wall
+                    }
+
+
+                    if ((dashDuration - dashState) % 4 == 0) //Create phantom replica (Stylish !!)
+                    {
+                        GameObject phantom = Instantiate(phantomMadeline, transform.position, Quaternion.identity);
+
+                        phantom.GetComponent<PhantomVanish>().facingLeft = facingLeft; //Replica facing according the player's
+                    }
+
+                    dashState--; //Update dash timer
                 }
-
-
-                if ((dashDuration - dashState) % 4 == 0) //Create phantom replica (Stylish !!)
-                {
-                    GameObject phantom = Instantiate(phantomMadeline, transform.position, Quaternion.identity);
-
-                    phantom.GetComponent<PhantomVanish>().facingLeft = facingLeft; //Replica facing according the player's
-                }
-
-                dashState--; //Update dash timer
             }
-            else //End dash
+            else if (!isWaveDashing) //End dash
             {
                 isDashing = false;
                 rb.velocity = Vector2.zero;
             }
         }
-        else if (IsGrounded()) //Restore dash when on the ground
+        else if (IsGrounded() && !isWaveDashing) //Restore dash when on the ground
         {
             dashLeft = dashNumber;
+        }
+    }
+    private void UpdateWaveDash()
+    {
+        if (isWaveDashing)
+        {
+            if (boostedTimer == 0)
+            {
+                isWaveDashing = false;
+                isDashing = false;
+            }
+        }
+    }
+    private void UpdateBoost()
+    {
+        if (boostedTimer > 0) //Timer before player can act
+        {
+            boostedTimer--;
+        }
+        else
+        {
+            boostedTimer = 0;
+            if (!keepVelocityAfterBoost)
+            {
+                boostedVelocity = false;
+            }
         }
     }
     private void UpdateFacing()
@@ -440,7 +501,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void UpdateGravity()
     {
-        if (isDashing || wallGrabbed) //Gravity is stopped when dashing or grabbing
+        if ((isDashing && !isWaveDashing) || wallGrabbed) //Gravity is stopped when dashing or grabbing
         {
             rb.gravityScale = 0f;
         }

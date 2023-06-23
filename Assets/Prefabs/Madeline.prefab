@@ -919,9 +919,13 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 10
   maxVerticalSpeed: 12
+  boostedVelocity: 0
+  boostedTimer: 0
+  maxBoostedHorizontalSpeed: 0
   dashNumber: 1
   dashDuration: 10
   dashSpeed: 13
+  waveDashFactor: 2
   phantomMadeline: {fileID: 2659869446193469606, guid: fcc9ff9897b1e3b4fbf36df9c3052f73, type: 3}
   dashState: 0
   dashLeft: 0
@@ -932,6 +936,7 @@ MonoBehaviour:
   staminaLeft: 0
   climbSpeed: 4
   grabCooldownAfterJumpingFromWall: 0
+  slidingOnWall: 0
 --- !u!114 &4652625231893016478
 MonoBehaviour:
   m_ObjectHideFlags: 0
