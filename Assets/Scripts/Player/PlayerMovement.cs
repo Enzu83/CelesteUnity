@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float maxVerticalSpeed = 20f;
     [HideInInspector] public bool boostedVelocity = false;
     [HideInInspector] public int boostedTimer = 0;
+    private bool keepVelocityAfterBoost = false;
     [HideInInspector] public float maxBoostedHorizontalSpeed;
     private float gravityScale;
 
@@ -53,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
     public float staminaLeft;
     public float climbSpeed = 4f;
     [HideInInspector] public int grabCooldownAfterJumpingFromWall = 0;
+    [HideInInspector] public bool slidingOnWall = false;
 
     void Start()
     {
@@ -90,6 +92,8 @@ public class PlayerMovement : MonoBehaviour
         {
             UpdateFacing();
 
+            UpdateSliding();
+
             GrabCheck();
 
             DashCheck();
@@ -104,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void UpdateVelocity()
     {
-        if (!isDashing && !wallGrabbed) //Can't move freely if dashing or grabbing a wall
+        if (!isDashing && !wallGrabbed && !slidingOnWall) //Can't move freely if dashing or grabbing a wall
         {
             //Horizontal Movement
 
@@ -141,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
                 else if (boostedTimer == 0 && dirX != 0) //Horizontal movement in the air
                 {
                     float horizontalVelocity;
-                    horizontalVelocity = rb.velocity.x + dirX * moveSpeed / 8;
+                    horizontalVelocity = rb.velocity.x + dirX * moveSpeed / 10;
 
                     if (Mathf.Abs(horizontalVelocity) > maxBoostedHorizontalSpeed) //Cap horizontal speed
                     {
@@ -157,18 +161,22 @@ public class PlayerMovement : MonoBehaviour
                     }
                 }
 
-                if (boostedTimer > 0) //Timer beofre player can act
+                if (boostedTimer > 0) //Timer before player can act
                 {
                     boostedTimer--;
                 }
                 else
                 {
                     boostedTimer = 0;
+                    if (!keepVelocityAfterBoost)
+                    {
+                        boostedVelocity = false;
+                    }
                 }
             }
         }
 
-        if (keyJump == KeyState.Down && IsGrounded() && !wallGrabbed) //Jump detection
+        if (keyJump == KeyState.Down && IsGrounded() && !wallGrabbed && !slidingOnWall) //Jump detection
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
 
@@ -183,7 +191,63 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, -maxVerticalSpeed);
         }
     }
+    private void UpdateSliding()
+    {
+        //Conditions : going toward a wall while being next to it
+        Vector2 tempDir = Vector2.zero;
+        if (facingLeft)
+        {
+            tempDir = Vector2.left;
+        }
+        else
+        {
+            tempDir = Vector2.right;
+        }
 
+        //Check if player can slide
+        if (dirX == tempDir.x /*Same direction than input*/ && Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, tempDir, .0625f, wall) && !IsGrounded() && rb.velocity.y < 0f)
+        {
+            slidingOnWall = true;
+        }
+        else
+        {
+            slidingOnWall = false;
+        }
+
+        //Sliding movement
+        if (slidingOnWall)
+        {
+            //Neutral jump
+            if (keyJump == KeyState.Down)
+            {
+                Vector2 newSpeed;
+
+                if (facingLeft)
+                {
+                    newSpeed = new Vector2(1.5f * moveSpeed, 0.95f * jumpForce);
+                }
+                else
+                {
+                    newSpeed = new Vector2(-1.5f * moveSpeed, 0.95f * jumpForce);
+                }
+
+                facingLeft = !facingLeft; //Invert facing
+
+                slidingOnWall = false;
+
+                //Apply speed
+                SetBoost(10, newSpeed, false);
+            }
+            else
+            {
+                //Limit vertical speed
+                if (rb.velocity.y < -maxVerticalSpeed / 2)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, -maxVerticalSpeed / 2);
+                }
+            }
+        }
+    }
     private void GrabCheck()
     {
         //Start grab
@@ -198,6 +262,7 @@ public class PlayerMovement : MonoBehaviour
                 else if (staminaLeft > 0f) //Can't grab without stamina
                 {
                     isGrabbing = true;
+                    slidingOnWall = false;
                 }
             }
             else if (keyGrab == KeyState.Up) //Stop grabbing if the button is released
@@ -235,7 +300,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (keyJump == KeyState.Down) //Jumping while climbing
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                    rb.velocity = new Vector2(rb.velocity.x, 0.85f * jumpForce);
                     wallGrabbed = false; //Jumping stops the player from grabbing the wall
                     isGrabbing = false; //Jumping ends grab
                     grabCooldownAfterJumpingFromWall = 10; //Time before a wall can be grabbed
@@ -372,6 +437,10 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.gravityScale = 0f;
         }
+        else if (slidingOnWall)
+        {
+            rb.gravityScale = 1f;
+        }
         else
         {
             rb.gravityScale = gravityScale;
@@ -411,6 +480,15 @@ public class PlayerMovement : MonoBehaviour
         wallGrabbed = false;
         staminaLeft = maxStamina;
         grabCooldownAfterJumpingFromWall = 0;
+    }
+
+    public void SetBoost(int boostDuration, Vector2 boostVector, bool keep)
+    {
+        boostedVelocity = true;
+        rb.velocity = boostVector; //Boost the velocity
+        boostedTimer = boostDuration;
+        maxBoostedHorizontalSpeed = Mathf.Abs(rb.velocity.x);
+        keepVelocityAfterBoost = keep;
     }
 
     private KeyState UpdateKeyState(string keyName)

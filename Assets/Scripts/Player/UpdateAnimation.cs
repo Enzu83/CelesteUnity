@@ -57,6 +57,11 @@ public class UpdateAnimation : MonoBehaviour
                 anim.speed = 0f;
             }
         }
+        else if (playerMovement.slidingOnWall)
+        {
+            state = AnimationState.climb;
+            anim.speed = 0f;
+        }
         else
         {
             anim.speed = 1f;
@@ -111,6 +116,17 @@ public class UpdateAnimation : MonoBehaviour
         else if (state == AnimationState.dash)
         {
             currentOffset = dashOffset;
+        }
+        else if (state == AnimationState.climb || playerMovement.slidingOnWall) //Sliding hair movement
+        {
+            if (rb.velocity.y > .1f)
+            {
+                currentOffset = jumpOffset;
+            }
+            else if (rb.velocity.y < -.1f)
+            {
+                currentOffset = fallOffset;
+            }
         }
         else if (state == AnimationState.climb)
         {

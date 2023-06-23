@@ -116,9 +116,6 @@ public class StateUpdate : MonoBehaviour
 
                 if (rbPlayer.velocity.y > playerMove.climbSpeed) //Apply boost only if player jumped off
                 {
-                    playerMove.boostedVelocity = true;
-                    playerMove.boostedTimer = 10;
-
                     if (playerMove.wallGrabbed)
                     {
                         playerMove.wallGrabbed = false; //Jumping stops the player from grabbing the wall
@@ -128,9 +125,7 @@ public class StateUpdate : MonoBehaviour
                         rbPlayer.velocity = new Vector2(0f, rbPlayer.velocity.y); //No horizontal speed when grabbing (before any boost)
                     }
 
-                    rbPlayer.velocity = boostFactor * moveSpeed * direction; //Boost the velocity
-
-                    playerMove.maxBoostedHorizontalSpeed = Mathf.Abs(rbPlayer.velocity.x);
+                    playerMove.SetBoost(10, boostFactor * moveSpeed * direction, true);
 
                     if (rbPlayer.velocity.x > 0) //Update facing after boost
                     {
