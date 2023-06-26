@@ -58,7 +58,10 @@ public class PlayerMovement : MonoBehaviour
     public float staminaLeft;
     public float climbSpeed = 4f;
     [HideInInspector] public int grabCooldownAfterJumpingFromWall = 0;
-    [HideInInspector] public bool slidingOnWall = false;
+    public bool slidingOnWall = false;
+    [SerializeField] private int canNeutralJumpTimer = 0; //After changing direction, the player is not sliding anymore but has few frames to perform a wallbounce
+    [SerializeField] private int canNeutralJumpDuration = 10;
+    private bool neutralJumpFacingLeft;
 
     void Start()
     {
@@ -93,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
         keyGrab = FixedUpdateKeyState(tempKeyGrab, keyGrab);
 
         //Update half hitbox
-        halfBottomHitboxCenter = new Vector2(coll.bounds.center.x, coll.bounds.center.y - coll.bounds.size.y / 4);
+        halfBottomHitboxCenter = new Vector2(coll.bounds.center.x, coll.bounds.center.y + coll.bounds.size.y / 4);
         halfBottomHitboxSize = new Vector2(coll.bounds.size.x, coll.bounds.size.y / 2);
 
         if (!deathResp.dead) //Player can't act if dead
@@ -217,34 +220,58 @@ public class PlayerMovement : MonoBehaviour
         //Sliding movement
         if (slidingOnWall)
         {
-            //Neutral jump
-            if (keyJump == KeyState.Down)
+            neutralJumpFacingLeft = facingLeft;
+
+            //Limit vertical speed
+            if (keyJump != KeyState.Down || canNeutralJumpTimer == 0)
             {
-                Vector2 newSpeed;
-
-                if (facingLeft)
-                {
-                    newSpeed = new Vector2(1.5f * moveSpeed, 0.95f * jumpForce);
-                }
-                else
-                {
-                    newSpeed = new Vector2(-1.5f * moveSpeed, 0.95f * jumpForce);
-                }
-
-                facingLeft = !facingLeft; //Invert facing
-
-                slidingOnWall = false;
-
-                //Apply speed
-                SetBoost(10, newSpeed, false);
-            }
-            else
-            {
-                //Limit vertical speed
                 if (rb.velocity.y < -maxVerticalSpeed / 2)
                 {
                     rb.velocity = new Vector2(rb.velocity.x, -maxVerticalSpeed / 2);
                 }
+            }
+
+            //Update wallbounce timer - max when sliding
+            canNeutralJumpTimer = canNeutralJumpDuration;
+        }
+        else
+        {
+            //Update wallbounce timer - decrease when not sliding
+            if (canNeutralJumpTimer > 0)
+            {
+                canNeutralJumpTimer--;
+            }
+        }
+
+        //Neutral jump
+        if (keyJump == KeyState.Down && canNeutralJumpTimer > 0)
+        {
+            canNeutralJumpTimer = 0;
+
+            Vector2 newSpeed;
+
+            if (neutralJumpFacingLeft)
+            {
+                newSpeed = new Vector2(1.5f * moveSpeed, 0.95f * jumpForce);
+            }
+            else
+            {
+                newSpeed = new Vector2(-1.5f * moveSpeed, 0.95f * jumpForce);
+            }
+
+            facingLeft = !neutralJumpFacingLeft; //Invert facing
+
+            slidingOnWall = false;
+
+            //Apply speed
+            SetBoost(10, newSpeed, false);
+        }
+        else
+        {
+            //Limit vertical speed
+            if (rb.velocity.y < -maxVerticalSpeed / 2)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, -maxVerticalSpeed / 2);
             }
         }
     }
@@ -263,6 +290,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     isGrabbing = true;
                     slidingOnWall = false;
+                    canNeutralJumpTimer = 0;
                 }
             }
             else if (keyGrab == KeyState.Up) //Stop grabbing if the button is released
@@ -334,8 +362,6 @@ public class PlayerMovement : MonoBehaviour
             staminaLeft = maxStamina;
             grabCooldownAfterJumpingFromWall = 0;
         }
-
-
     }
     private void DashCheck()
     {
@@ -535,7 +561,6 @@ public class PlayerMovement : MonoBehaviour
 
         return groundedFrames == 5;
     }
-
     public void ResetDashAndGrab() //Reset all variables related to dash and grab
     {
         //Reset dash
@@ -549,7 +574,6 @@ public class PlayerMovement : MonoBehaviour
         staminaLeft = maxStamina;
         grabCooldownAfterJumpingFromWall = 0;
     }
-
     public void SetBoost(int boostDuration, Vector2 boostVector, bool keep)
     {
         boostedVelocity = true;
