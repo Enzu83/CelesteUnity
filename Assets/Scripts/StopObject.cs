@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class StopObject : MonoBehaviour
 {
-    private Rigidbody2D rb;
     public bool stopped = false;
     private int frameDuration;
     private int timer = 0;
 
     private Vector2 storedVelocity;
 
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
+    private bool upperTransition;
+    private GameObject transitionCamera;
 
     private void FixedUpdate()
     {
@@ -28,19 +25,30 @@ public class StopObject : MonoBehaviour
             {
                 timer = 0;
                 stopped = false;
-                rb.velocity = storedVelocity;
+
+                if (upperTransition && transitionCamera.activeInHierarchy)
+                {
+                    storedVelocity = new Vector2(0f, 10f);
+                    GetComponent<PlayerMovement>().ResetDashAndGrab();
+                }
+
+                GetComponent<Rigidbody2D>().velocity = storedVelocity;
+                GetComponent<Rigidbody2D>().gravityScale = GetComponent<PlayerMovement>().gravityScale;
                 GetComponent<PlayerMovement>().dashLeft = GetComponent<PlayerMovement>().dashNumber;
             }
         }
     }
-    public void Stop(float timeDuration)
+    public void Stop(float timeDuration, bool up, GameObject camera)
     {
         frameDuration = (int)(timeDuration / Time.deltaTime);
+        upperTransition = up;
+        transitionCamera = camera;
 
         stopped = true;
         timer = 0;
 
-        storedVelocity = rb.velocity;
-        rb.velocity = Vector2.zero;
+        storedVelocity = GetComponent<Rigidbody2D>().velocity;
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        GetComponent<Rigidbody2D>().gravityScale = 0f;
     }
 }

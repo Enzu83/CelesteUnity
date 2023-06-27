@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public int boostedTimer = 0;
     private bool keepVelocityAfterBoost = false;
     [HideInInspector] public float maxBoostedHorizontalSpeed;
-    [SerializeField] private float gravityScale;
+    public float gravityScale;
 
     //Dash Variables
     [SerializeField] public int dashNumber = 1;

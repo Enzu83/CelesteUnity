@@ -11,8 +11,14 @@ public class ScreenTransitionManager : MonoBehaviour
     {
         if (virtualCamera.activeInHierarchy == false && coll.CompareTag("Player") && !coll.isTrigger)
         {
-            virtualCamera.SetActive(true);
-            player.GetComponent<StopObject>().Stop(0.4f);
+            if (coll.gameObject.GetComponent<Rigidbody2D>().velocity != Vector2.zero)
+            {
+                bool upperTransition;
+                upperTransition = Camera.current.transform.position.y < transform.position.y; //Different behavior if player is going up
+
+                virtualCamera.SetActive(true);
+                player.GetComponent<StopObject>().Stop(0.4f, upperTransition, virtualCamera.gameObject);
+            }
         }
     }
 
@@ -20,7 +26,10 @@ public class ScreenTransitionManager : MonoBehaviour
     {
         if (virtualCamera.activeInHierarchy == true && coll.CompareTag("Player") && !coll.isTrigger)
         {
-            virtualCamera.SetActive(false);
+            if (coll.gameObject.GetComponent<Rigidbody2D>().velocity != Vector2.zero)
+            {
+                virtualCamera.SetActive(false);
+            }
         }
     }
 
