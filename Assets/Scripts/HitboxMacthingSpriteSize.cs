@@ -7,7 +7,7 @@ public class HitboxMacthingSpriteSize : MonoBehaviour
     private void Start()
     {
         float horizontalSizeFactor = 1f;
-        if (this.gameObject.CompareTag("Spike"))
+        if (this.gameObject.CompareTag("Spike")) //Smaller hitbox for sprite
         {
             horizontalSizeFactor = 0.9f;
         }

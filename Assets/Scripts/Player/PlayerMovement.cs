@@ -120,9 +120,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         isAirborne = !IsGrounded();
-
-        Debug.Log(rb.velocity);
-
     }
     private void UpdateVelocity()
     {
