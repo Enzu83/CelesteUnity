@@ -474,7 +474,7 @@ public class PlayerMovement : MonoBehaviour
                     facingLeft = false;
                     wallBouncing = true;
 
-                    SetBoost(8, dashSpeed * new Vector2(0.6f, 1.4f), true);
+                    SetBoost(8, dashSpeed * new Vector2(0.5f, 1.2f), true);
                 }
                 //Wallbounce check (wall on the right) - only if dash is up
                 else if (dashDirection == Vector2.up && keyJump == KeyState.Down && Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, Vector2.right, .2f, wall))
@@ -484,7 +484,7 @@ public class PlayerMovement : MonoBehaviour
                     facingLeft = true;
                     wallBouncing = true;
 
-                    SetBoost(8, dashSpeed * new Vector2(-0.6f, 1.4f), true);
+                    SetBoost(8, dashSpeed * new Vector2(-0.5f, 1.2f), true);
                 }
                 //Update dash direction if hitting a wall
                 else

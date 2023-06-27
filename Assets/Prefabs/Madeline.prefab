@@ -750,6 +750,7 @@ GameObject:
   - component: {fileID: 4652625231893016473}
   - component: {fileID: 4652625231893016478}
   - component: {fileID: 3854101963534775089}
+  - component: {fileID: -5920053960647677598}
   m_Layer: 0
   m_Name: Madeline
   m_TagString: Player
@@ -922,10 +923,12 @@ MonoBehaviour:
   boostedVelocity: 0
   boostedTimer: 0
   maxBoostedHorizontalSpeed: 0
+  gravityScale: 0
   dashNumber: 1
   dashDuration: 10
   dashSpeed: 13
   waveDashFactor: 2
+  isWaveDashing: 0
   phantomMadeline: {fileID: 2659869446193469606, guid: fcc9ff9897b1e3b4fbf36df9c3052f73, type: 3}
   dashState: 0
   dashLeft: 0
@@ -937,6 +940,7 @@ MonoBehaviour:
   climbSpeed: 4
   grabCooldownAfterJumpingFromWall: 0
   slidingOnWall: 0
+  canNeutralJumpDuration: 10
 --- !u!114 &4652625231893016478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -971,3 +975,16 @@ MonoBehaviour:
   Ball: {fileID: 8772363958282602602, guid: b5a94c420ccb7e04fa6d1e7bb556508f, type: 3}
   deadSpeed: 5
   dead: 0
+--- !u!114 &-5920053960647677598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4652625231893016452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab0202e2b711b6a46b897bef86898d01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stopped: 0
