@@ -58,7 +58,5 @@ public class OnewayPlatformInitialization : MonoBehaviour
 
         sprite.enabled = false;
         coll.enabled = true;
-
-        Debug.Log(coll.bounds.size.y);
     }
 }

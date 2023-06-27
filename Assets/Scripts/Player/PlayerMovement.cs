@@ -21,8 +21,12 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask wall;
     public LayerMask spring;
 
-    private Vector2 halfBottomHitboxCenter;
-    private Vector2 halfBottomHitboxSize;
+    private Vector2 hitboxCenter;
+    private Vector2 hitboxSize;
+    private Vector2 halfBottomHitboxCenter = Vector2.zero;
+    private Vector2 halfBottomHitboxSize = Vector2.zero;
+    private Vector2 squishedOffset = Vector2.zero;
+    public Vector2 squishedLimit;
 
     public bool facingLeft = false;
     public bool isAirborne;
@@ -73,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
         gravityScale = rb.gravityScale;
         dashLeft = dashNumber;
         staminaLeft = maxStamina;
+
+        squishedLimit = new Vector2(coll.bounds.size.x - 2 * 0.0625f, coll.bounds.size.y - 2 * 0.0625f);
     }
 
     void Update()
@@ -96,9 +102,12 @@ public class PlayerMovement : MonoBehaviour
         keyDash = FixedUpdateKeyState(tempKeyDash, keyDash);
         keyGrab = FixedUpdateKeyState(tempKeyGrab, keyGrab);
 
-        //Update half hitbox
+        //Update hitbox references
         halfBottomHitboxCenter = new Vector2(coll.bounds.center.x, coll.bounds.center.y + coll.bounds.size.y / 4);
         halfBottomHitboxSize = new Vector2(coll.bounds.size.x, coll.bounds.size.y / 2);
+
+        hitboxCenter = coll.bounds.center;
+        hitboxSize = coll.bounds.size;
 
         if (!deathResp.dead) //Player can't act if dead
         {
@@ -117,6 +126,8 @@ public class PlayerMovement : MonoBehaviour
             UpdateGravity();
 
             UpdateVelocity();
+
+            UpdateSquish();
         }
 
         isAirborne = !IsGrounded();
@@ -600,6 +611,66 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = gravityScale;
         }
 
+    }
+    private void UpdateSquish() //Size is reduced if a wall is next to it. If size is too small => Kill the player
+    {
+        Vector2 tempUpdatedOffset = Vector2.zero; //Changes in size is stored and updated at the end to keep the same squished offsets for all 4 checks
+
+        //Horizontal check
+        if (Physics2D.BoxCast(hitboxCenter, hitboxSize - squishedOffset, 0f, Vector2.left, 0.0625f, wall) && Physics2D.BoxCast(hitboxCenter, hitboxSize - squishedOffset, 0f, Vector2.right, 0.0625f, wall))
+        {
+            tempUpdatedOffset = Vector2.left;
+        }
+
+        //Vertical check
+        if (Physics2D.BoxCast(hitboxCenter, hitboxSize - squishedOffset, 0f, Vector2.down, 0.0625f, wall) && Physics2D.BoxCast(hitboxCenter, hitboxSize - squishedOffset, 0f, Vector2.up, 0.0625f, wall))
+        {
+            tempUpdatedOffset = Vector2.left;
+        }
+
+        //Update squished offsets
+
+        //Horizontal offset
+        if (tempUpdatedOffset.x == 0) //If no changes in offset, decrease it
+        {
+            if (squishedOffset.x > 0)
+            {
+                squishedOffset = new Vector2(squishedOffset.x - 0.0625f, squishedOffset.y);
+            }
+        }
+        else if (squishedOffset.x < squishedLimit.x)
+        {
+            squishedOffset = new Vector2(squishedOffset.x + 0.0625f, squishedOffset.y);
+        }
+        else
+        {
+            //Kill player
+            GetComponent<DeathAndRespawn>().dead = true; //Death trigger
+            rb.velocity = Vector2.zero;
+            rb.gravityScale = 0f; //Stop gravity
+
+        }
+
+        //Vertical offset
+        if (tempUpdatedOffset.y == 0) //If no changes in offset, decrease it
+        {
+            if (squishedOffset.y > 0)
+            {
+                squishedOffset = new Vector2(squishedOffset.x, squishedOffset.y - 0.0625f);
+            }
+        }
+        else if (squishedOffset.y < squishedLimit.y)
+        {
+            squishedOffset = new Vector2(squishedOffset.x, squishedOffset.y + 0.0625f);
+        }
+        else
+        {
+            //Kill player
+            GetComponent<DeathAndRespawn>().dead = true; //Death trigger
+            rb.velocity = Vector2.zero;
+            rb.gravityScale = 0f; //Stop gravity
+
+        }
     }
     public bool IsGrounded() //Check if a wall is below the player
     {
