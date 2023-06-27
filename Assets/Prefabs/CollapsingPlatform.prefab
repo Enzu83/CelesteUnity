@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: -534192135
   m_SortingLayer: -2
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: 22c4e2da2f26c994bb193aabe6f315bf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3b854094ee2278c47b1107dc84cb2ff4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -187,6 +187,7 @@ MonoBehaviour:
   - {fileID: -651626714801015742, guid: 5b5cbb1bb0a671b44b10962e2c58ae62, type: 3}
   - {fileID: 8586536309971130511, guid: 5b5cbb1bb0a671b44b10962e2c58ae62, type: 3}
   - {fileID: -794051591363106186, guid: 5b5cbb1bb0a671b44b10962e2c58ae62, type: 3}
+  collaspedSprite: {fileID: 21300000, guid: 22c4e2da2f26c994bb193aabe6f315bf, type: 3}
   collapsingState: 0
   timeBeforeCollapsing: 60
   timeAfterCollapsing: 120

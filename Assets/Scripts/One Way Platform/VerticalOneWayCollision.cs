@@ -25,7 +25,5 @@ public class VerticalOneWayCollision : MonoBehaviour
         {
             coll.enabled = false;
         }
-
-        Debug.Log(playerColl.bounds.center.y);
     }
 }

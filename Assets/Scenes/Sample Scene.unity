@@ -732,7 +732,7 @@ PrefabInstance:
     - target: {fileID: 450512033666002096, guid: 5de440b28432a0545b10d8bf13eefa32, type: 3}
       propertyPath: m_Icon
       value: 
-      objectReference: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+      objectReference: {fileID: 0}
     - target: {fileID: 450512033666002096, guid: 5de440b28432a0545b10d8bf13eefa32, type: 3}
       propertyPath: m_Name
       value: Spawnpoint (1)
@@ -3371,7 +3371,7 @@ PrefabInstance:
     - target: {fileID: 450512033666002096, guid: 5de440b28432a0545b10d8bf13eefa32, type: 3}
       propertyPath: m_Icon
       value: 
-      objectReference: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+      objectReference: {fileID: 0}
     - target: {fileID: 450512033666002096, guid: 5de440b28432a0545b10d8bf13eefa32, type: 3}
       propertyPath: m_Name
       value: Spawnpoint
@@ -3887,6 +3887,10 @@ PrefabInstance:
       propertyPath: m_UsedByEffector
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7207117466382522224, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7207117466382522225, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
       propertyPath: wallOnTheLeft
       value: 1
@@ -3897,11 +3901,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7207117466382522226, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.989
+      value: -6.5
       objectReference: {fileID: 0}
     - target: {fileID: 7207117466382522226, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.338
+      value: -0.25
       objectReference: {fileID: 0}
     - target: {fileID: 7207117466382522226, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3934,6 +3938,14 @@ PrefabInstance:
     - target: {fileID: 7207117466382522226, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7207117466382522227, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
+      propertyPath: m_Size.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7207117466382522227, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
+      propertyPath: m_Size.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7207117466382522228, guid: 728d83f86e0f9e74fb8785b617bae169, type: 3}
       propertyPath: m_Name

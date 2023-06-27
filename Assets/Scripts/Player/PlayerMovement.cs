@@ -523,15 +523,16 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //End of boost of wallbounce and wavedash
-        if (boostedTimer == 0)
+        if (boostedTimer == 0 && (wallBouncing || isWaveDashing))
         {
             if (boostedVelocity)
             {
-                rb.velocity *= 0.95f;
+                rb.velocity = new Vector2(0.95f * rb.velocity.x, rb.velocity.y);
 
-                if (rb.velocity.x < .0625f)
+                if (Mathf.Abs(rb.velocity.x) < .0625f)
                 {
                     rb.velocity = new Vector2(0f, rb.velocity.y);
+                    boostedVelocity = false;
                 }
             }
             else if (wallBouncing)

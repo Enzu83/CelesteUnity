@@ -11,6 +11,7 @@ public class CollapsingPlatformTiles : MonoBehaviour
     [SerializeField] private GameObject collapsingTile;
     public GameObject player;
     public Sprite[] tiles;
+    [SerializeField] private Sprite collaspedSprite;
 
     public int collapsingState = 0;
     [SerializeField] private int timeBeforeCollapsing = 75;
@@ -22,6 +23,8 @@ public class CollapsingPlatformTiles : MonoBehaviour
     {
         sprite = GetComponent<SpriteRenderer>();
         coll = GetComponent<BoxCollider2D>();
+
+        sprite.sprite = collaspedSprite; //Set sprite
 
         for (int i = 0; i < (int)(2 * sprite.size.x); i++) //Create all platform tiles
         {
