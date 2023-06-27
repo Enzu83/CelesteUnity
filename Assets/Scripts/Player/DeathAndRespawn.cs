@@ -78,6 +78,7 @@ public class DeathAndRespawn : MonoBehaviour
             }
             else //End of death
             {
+
                 dead = false; //Reset death trigger
                 deathAnimationTimer = 0; //Reset timer
                 GetComponent<PlayerMovement>().ResetDashAndGrab(); //Stop dash and grab when respawning

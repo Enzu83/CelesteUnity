@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2922348348996681807}
   m_Layer: 8
   m_Name: Rail
-  m_TagString: Untagged
+  m_TagString: Entity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

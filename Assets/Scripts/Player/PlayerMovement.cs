@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     //Misc. variables
     private Rigidbody2D rb;
     [HideInInspector] public BoxCollider2D coll;
+    private StopObject stop;
     public LayerMask wall;
     public LayerMask spring;
 
@@ -26,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 halfBottomHitboxCenter = Vector2.zero;
     private Vector2 halfBottomHitboxSize = Vector2.zero;
     private Vector2 squishedOffset = Vector2.zero;
-    public Vector2 squishedLimit;
+    private Vector2 squishedLimit;
 
     public bool facingLeft = false;
     public bool isAirborne;
@@ -73,6 +74,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
         deathResp = GetComponent<DeathAndRespawn>();
+        stop = GetComponent<StopObject>();
 
         gravityScale = rb.gravityScale;
         dashLeft = dashNumber;
@@ -109,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
         hitboxCenter = coll.bounds.center;
         hitboxSize = coll.bounds.size;
 
-        if (!deathResp.dead) //Player can't act if dead
+        if (!deathResp.dead && !stop.stopped) //Player can't act if dead
         {
             UpdateFacing();
 
@@ -263,11 +265,11 @@ public class PlayerMovement : MonoBehaviour
 
             if (neutralJumpFacingLeft)
             {
-                newSpeed = new Vector2(1.5f * moveSpeed, 0.95f * jumpForce);
+                newSpeed = new Vector2(1.6f * moveSpeed, 0.9f * jumpForce);
             }
             else
             {
-                newSpeed = new Vector2(-1.5f * moveSpeed, 0.95f * jumpForce);
+                newSpeed = new Vector2(-1.6f * moveSpeed, 0.9f * jumpForce);
             }
 
             facingLeft = !neutralJumpFacingLeft; //Invert facing
@@ -645,7 +647,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             //Kill player
-            GetComponent<DeathAndRespawn>().dead = true; //Death trigger
+            deathResp.dead = true; //Death trigger
             rb.velocity = Vector2.zero;
             rb.gravityScale = 0f; //Stop gravity
 
@@ -666,12 +668,13 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             //Kill player
-            GetComponent<DeathAndRespawn>().dead = true; //Death trigger
+            deathResp.dead = true; //Death trigger
             rb.velocity = Vector2.zero;
             rb.gravityScale = 0f; //Stop gravity
 
         }
     }
+
     public bool IsGrounded() //Check if a wall is below the player
     {
         return (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, .0625f, wall) && !Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.zero, .0625f, wall));

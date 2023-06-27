@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6642251512564006474}
   m_Layer: 8
   m_Name: RailWheel
-  m_TagString: Untagged
+  m_TagString: Entity
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -108,3 +108,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e13efc4b4b8ba7c49aae84e47265553e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotateSpeed: 12
