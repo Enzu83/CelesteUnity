@@ -8,6 +8,9 @@ TagManager:
   - Spike
   - Collapsing Tile
   - Entity
+  - Screen
+  - Cinemachine Camera
+  - Winged Strawberry
   layers:
   - Default
   - TransparentFX

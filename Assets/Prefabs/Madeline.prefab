@@ -751,6 +751,7 @@ GameObject:
   - component: {fileID: 4652625231893016478}
   - component: {fileID: 3854101963534775089}
   - component: {fileID: -5920053960647677598}
+  - component: {fileID: -5030417893092531104}
   m_Layer: 0
   m_Name: Madeline
   m_TagString: Player
@@ -973,6 +974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ball: {fileID: 8772363958282602602, guid: b5a94c420ccb7e04fa6d1e7bb556508f, type: 3}
+  respawnPosition: {x: 0, y: 0}
   deadSpeed: 5
   dead: 0
 --- !u!114 &-5920053960647677598
@@ -988,3 +990,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopped: 0
+--- !u!114 &-5030417893092531104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4652625231893016452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c75b2efb894bf348a688d0266a0e8c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strawberries: []

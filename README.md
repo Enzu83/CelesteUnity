@@ -26,8 +26,9 @@ I need to build the level design and I'm done for !!!
 - Moving Rail Platform
 - One Way Platform
 - Screen Transitions
+- Winged Strawberry
 
 
 ## To do list
 
-- Winged strawberry
+- Fix screen transition - sometimes stuck when player is in-between 2 screens

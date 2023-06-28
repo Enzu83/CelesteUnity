@@ -11,13 +11,15 @@ public class ScreenTransitionManager : MonoBehaviour
     {
         if (virtualCamera.activeInHierarchy == false && coll.CompareTag("Player") && !coll.isTrigger)
         {
-            if (coll.gameObject.GetComponent<Rigidbody2D>().velocity != Vector2.zero)
+            if (coll.gameObject.GetComponent<Rigidbody2D>().velocity != Vector2.zero) //Changing screen
             {
                 bool upperTransition;
                 upperTransition = Camera.current.transform.position.y < transform.position.y; //Different behavior if player is going up
 
                 virtualCamera.SetActive(true);
                 player.GetComponent<StopObject>().Stop(0.4f, upperTransition, virtualCamera);
+
+                RefreshWingedStrawberry(virtualCamera.transform.parent.gameObject);
             }
         }
     }
@@ -33,5 +35,15 @@ public class ScreenTransitionManager : MonoBehaviour
         }
     }
 
-
+    private void RefreshWingedStrawberry(GameObject screen)
+    {
+        GameObject[] wingedBerries = GameObject.FindGameObjectsWithTag("Winged Strawberry");
+        foreach (GameObject berry in wingedBerries)
+        {
+            if (GameObject.ReferenceEquals(berry.GetComponent<WingedStrawberry>().screen, screen))
+            {
+                berry.GetComponent<WingedStrawberry>().Refresh();
+            }
+        }
+    }
 }

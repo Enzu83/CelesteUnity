@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerCollectables : MonoBehaviour
 {
-    [HideInInspector] public List<GameObject> strawberries = new List<GameObject>();
+    public List<GameObject> strawberries = new List<GameObject>();
 
     private DeathAndRespawn deathResp;
     void Start()

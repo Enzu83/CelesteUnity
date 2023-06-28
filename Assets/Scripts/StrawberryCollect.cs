@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class StrawberryCollect : MonoBehaviour
 {
-    /*[HideInInspector]*/
-    [HideInInspector] public int state = 0;
-    private Vector2 initialPosition;
+    public int state = 0;
+    [HideInInspector] public Vector2 initialPosition;
     private Vector2 relativeOffset;
     private List<GameObject> strawberries;
 
@@ -77,6 +76,10 @@ public class StrawberryCollect : MonoBehaviour
 
     public void DestroyStrawberry()
     {
+        if (transform.parent != null)
+        {
+            Destroy(transform.parent.gameObject);
+        }
         strawberries.Remove(this.gameObject);
         Destroy(this.gameObject);
     }

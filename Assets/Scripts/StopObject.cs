@@ -82,9 +82,6 @@ public class StopObject : MonoBehaviour
 
     private bool VisibleInCamera(GameObject gameObject)
     {
-        Debug.Log(transitionCamera.transform.parent.gameObject);
-        Debug.Log(gameObject.GetComponent<SpawnpointInitialization>().screen);
-
         if (GameObject.ReferenceEquals(gameObject.GetComponent<SpawnpointInitialization>().screen, transitionCamera.transform.parent.gameObject))
         {
             return true;
