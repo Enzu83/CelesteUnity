@@ -103,6 +103,7 @@ public class WingedStrawberry : MonoBehaviour
             GetComponent<BoxCollider2D>().enabled = true;
             transform.position = initialPosition;
             fly = false;
+            pickedUp = false;
             timer = 0;
         }
     }
