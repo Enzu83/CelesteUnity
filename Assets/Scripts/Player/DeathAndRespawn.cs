@@ -7,7 +7,7 @@ public class DeathAndRespawn : MonoBehaviour
     private GameObject[] spawnPoints;
     [SerializeField] private GameObject Ball;
     private Rigidbody2D rb;
-    private Vector2 respawnPosition = Vector2.zero;
+    public Vector2 respawnPosition = Vector2.zero;
     [SerializeField] private float deadSpeed = 5f;
 
     public bool dead = false;
@@ -112,7 +112,7 @@ public class DeathAndRespawn : MonoBehaviour
         }
     }
 
-    private Vector2 Nearest(GameObject[] gameObjectList) //Find the nearest from player
+    public Vector2 Nearest(GameObject[] gameObjectList) //Find the nearest from player
     {
         int index = 0;
         float minDist = Mathf.Infinity;

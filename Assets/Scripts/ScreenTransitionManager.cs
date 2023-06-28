@@ -17,7 +17,7 @@ public class ScreenTransitionManager : MonoBehaviour
                 upperTransition = Camera.current.transform.position.y < transform.position.y; //Different behavior if player is going up
 
                 virtualCamera.SetActive(true);
-                player.GetComponent<StopObject>().Stop(0.4f, upperTransition, virtualCamera.gameObject);
+                player.GetComponent<StopObject>().Stop(0.4f, upperTransition, virtualCamera);
             }
         }
     }

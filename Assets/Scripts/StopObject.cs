@@ -13,6 +13,16 @@ public class StopObject : MonoBehaviour
     private bool upperTransition;
     private GameObject transitionCamera;
 
+    private Rigidbody2D rb;
+    private PlayerMovement playerMovement;
+    private DeathAndRespawn deathResp;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        playerMovement = GetComponent<PlayerMovement>();
+        deathResp = GetComponent<DeathAndRespawn>();
+    }
     private void FixedUpdate()
     {
         if (stopped)
@@ -26,15 +36,33 @@ public class StopObject : MonoBehaviour
                 timer = 0;
                 stopped = false;
 
-                if (upperTransition && transitionCamera.activeInHierarchy)
+                if (upperTransition && transitionCamera.activeInHierarchy && deathResp.dead == false)
                 {
                     storedVelocity = new Vector2(0f, 10f);
-                    GetComponent<PlayerMovement>().ResetDashAndGrab();
+                    playerMovement.ResetDashAndGrab();
                 }
 
-                GetComponent<Rigidbody2D>().velocity = storedVelocity;
-                GetComponent<Rigidbody2D>().gravityScale = GetComponent<PlayerMovement>().gravityScale;
-                GetComponent<PlayerMovement>().dashLeft = GetComponent<PlayerMovement>().dashNumber;
+                rb.velocity = storedVelocity;
+                rb.gravityScale = playerMovement.gravityScale;
+                playerMovement.dashLeft = playerMovement.dashNumber;
+
+
+                ///Update spawnpoint
+                List<GameObject> spawnpointsInCamera = new List<GameObject>();
+
+                //Select spawnpoint only in camera
+                foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Respawn"))
+                {
+                    if (VisibleInCamera(obj))
+                    {
+                        spawnpointsInCamera.Add(obj);
+                    }
+                }
+
+                //Set new spawnpoint as the nearest spawnpoint
+                deathResp.respawnPosition = deathResp.Nearest(spawnpointsInCamera.ToArray());
+
+
             }
         }
     }
@@ -50,5 +78,20 @@ public class StopObject : MonoBehaviour
         storedVelocity = GetComponent<Rigidbody2D>().velocity;
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         GetComponent<Rigidbody2D>().gravityScale = 0f;
+    }
+
+    private bool VisibleInCamera(GameObject gameObject)
+    {
+        Debug.Log(transitionCamera.transform.parent.gameObject);
+        Debug.Log(gameObject.GetComponent<SpawnpointInitialization>().screen);
+
+        if (GameObject.ReferenceEquals(gameObject.GetComponent<SpawnpointInitialization>().screen, transitionCamera.transform.parent.gameObject))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

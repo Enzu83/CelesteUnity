@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8698905793667544373}
   m_Layer: 2
   m_Name: CM vcam1
-  m_TagString: Untagged
+  m_TagString: Cinemachine Camera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 8698905794329889509}
   m_Layer: 2
   m_Name: Screen
-  m_TagString: Untagged
+  m_TagString: Screen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
