@@ -32,3 +32,8 @@ I need to build the level design and I'm done for !!!
 ## To do list
 
 - Fix screen transition - sometimes stuck when player is in-between 2 screens
+
+
+## Side notes
+
+The concept of the game is not mine, so are also the sounds and the images.
