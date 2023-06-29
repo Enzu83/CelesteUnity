@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6675834287535192915}
   - component: {fileID: 6675834287535192914}
   - component: {fileID: 6675834287535192913}
-  - component: {fileID: 6675834287535192918}
   - component: {fileID: 6675834287535192917}
   - component: {fileID: 6675834287535192916}
+  - component: {fileID: 6675834287535192918}
   m_Layer: 8
   m_Name: WingedStrawberry
   m_TagString: Winged Strawberry
@@ -106,20 +106,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6675834287535192918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6675834287535192912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00858984f99c9b64c83ed6525a93511a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screen: {fileID: 0}
-  player: {fileID: 4652625231893016452, guid: 66a6ea07c77a98b4892c36aba182bdee, type: 3}
 --- !u!50 &6675834287535192917
 Rigidbody2D:
   serializedVersion: 4
@@ -167,6 +153,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.755671, y: 0.65882134}
   m_EdgeRadius: 0
+--- !u!114 &6675834287535192918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6675834287535192912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00858984f99c9b64c83ed6525a93511a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screen: {fileID: 0}
+  player: {fileID: 4652625231893016452, guid: 66a6ea07c77a98b4892c36aba182bdee, type: 3}
 --- !u!1001 &6675834287860015607
 PrefabInstance:
   m_ObjectHideFlags: 0

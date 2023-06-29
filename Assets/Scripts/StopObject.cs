@@ -38,7 +38,7 @@ public class StopObject : MonoBehaviour
 
                 if (upperTransition && transitionCamera.activeInHierarchy && deathResp.dead == false)
                 {
-                    storedVelocity = new Vector2(0f, 10f);
+                    storedVelocity = new Vector2(0f, 11f);
                     playerMovement.ResetDashAndGrab();
                 }
 

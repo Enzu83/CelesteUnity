@@ -64,6 +64,8 @@ public class PlayerMovement : MonoBehaviour
     public float staminaLeft;
     public float climbSpeed = 4f;
     [HideInInspector] public int grabCooldownAfterJumpingFromWall = 0;
+    [SerializeField] private bool nextToWall = false;
+    private int nextToWallDirection = 0;
     public bool slidingOnWall = false;
     private int canNeutralJumpTimer = 0; //After changing direction, the player is not sliding anymore but has few frames to perform a wallbounce
     [SerializeField] private int canNeutralJumpDuration = 10;
@@ -229,7 +231,22 @@ public class PlayerMovement : MonoBehaviour
         {
             slidingOnWall = false;
         }
-
+        //Check if player is next to a wall
+        if (Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, Vector2.left, .0625f, wall) && !IsGrounded() && !wallGrabbed)
+        {
+            nextToWall = true;
+            nextToWallDirection = -1;
+        }
+        else if (Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, Vector2.right, .0625f, wall) && !IsGrounded() && !wallGrabbed)
+        {
+            nextToWall = true;
+            nextToWallDirection = 1;
+        }
+        else
+        {
+            nextToWall = false;
+            nextToWallDirection = 0;
+        }
         //Sliding movement
         if (slidingOnWall)
         {
@@ -243,9 +260,16 @@ public class PlayerMovement : MonoBehaviour
                     rb.velocity = new Vector2(rb.velocity.x, -maxVerticalSpeed / 2);
                 }
             }
-
-            //Update wallbounce timer - max when sliding
+        }
+        if (nextToWall)
+        {
+            neutralJumpFacingLeft = facingLeft;
+            //Update walljump timer - max when sliding
             canNeutralJumpTimer = canNeutralJumpDuration;
+        }
+        else if (IsGrounded())
+        {
+            canNeutralJumpTimer = 0;
         }
         else
         {
@@ -261,31 +285,43 @@ public class PlayerMovement : MonoBehaviour
         {
             canNeutralJumpTimer = 0;
 
-            Vector2 newSpeed;
+            Vector2 newSpeed = Vector2.zero;
 
-            if (neutralJumpFacingLeft)
+            if (slidingOnWall) //Sliding
             {
-                newSpeed = new Vector2(1.6f * moveSpeed, 0.9f * jumpForce);
-            }
-            else
-            {
-                newSpeed = new Vector2(-1.6f * moveSpeed, 0.9f * jumpForce);
-            }
+                if (neutralJumpFacingLeft)
+                {
+                    newSpeed = new Vector2(1.6f * moveSpeed, 0.9f * jumpForce);
+                }
+                else
+                {
+                    newSpeed = new Vector2(-1.6f * moveSpeed, 0.9f * jumpForce);
+                }
+                facingLeft = !neutralJumpFacingLeft; //Invert facing
 
-            facingLeft = !neutralJumpFacingLeft; //Invert facing
+                //Apply speed
+                SetBoost(10, newSpeed, false);
+            }
+            else if (nextToWall) //Only next to a wall
+            {
+                if (nextToWallDirection == -1)
+                {
+                    facingLeft = false;
+                    newSpeed = new Vector2(1.6f * moveSpeed, 0.9f * jumpForce);
+                }
+                else if (nextToWallDirection == 1)
+                {
+                    facingLeft = true;
+                    newSpeed = new Vector2(-1.6f * moveSpeed, 0.9f * jumpForce);
+                }
+
+                //Apply speed
+                SetBoost(10, newSpeed, false);
+            }
 
             slidingOnWall = false;
-
-            //Apply speed
-            SetBoost(10, newSpeed, false);
-        }
-        else if (canNeutralJumpTimer > 0)
-        {
-            //Limit vertical speed
-            if (rb.velocity.y < -maxVerticalSpeed / 2)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, -maxVerticalSpeed / 2);
-            }
+            nextToWall = false;
+            nextToWallDirection = 0;
         }
     }
     private void GrabCheck()
@@ -303,6 +339,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     isGrabbing = true;
                     slidingOnWall = false;
+                    nextToWall = false;
                     canNeutralJumpTimer = 0;
                 }
             }
