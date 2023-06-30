@@ -6,6 +6,7 @@ public class ScreenTransitionManager : MonoBehaviour
 {
     public GameObject virtualCamera;
     [SerializeField] private GameObject player;
+    private ScreenManager screenManager;
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
@@ -13,10 +14,13 @@ public class ScreenTransitionManager : MonoBehaviour
         {
             if (coll.gameObject.GetComponent<Rigidbody2D>().velocity != Vector2.zero) //Changing screen
             {
+                screenManager = transform.parent.gameObject.GetComponent<ScreenManager>();
+
                 bool upperTransition;
-                upperTransition = Camera.current.transform.position.y < transform.position.y; //Different behavior if player is going up
+                upperTransition = screenManager.currentCamera.transform.position.y < transform.position.y; //Different behavior if player is going up
 
                 virtualCamera.SetActive(true);
+                screenManager.currentCamera = virtualCamera;
                 player.GetComponent<StopObject>().Stop(0.4f, upperTransition, virtualCamera);
 
                 RefreshWingedStrawberry(virtualCamera.transform.parent.gameObject);
