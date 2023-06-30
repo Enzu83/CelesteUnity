@@ -22,7 +22,6 @@ public class WingedStrawberry : MonoBehaviour
         strawberry = transform.GetChild(0).gameObject;
     }
 
-
     void FixedUpdate()
     {
         if (pickedUp == false)
@@ -83,6 +82,7 @@ public class WingedStrawberry : MonoBehaviour
             strawberry.GetComponent<SpriteRenderer>().enabled = true;
             strawberry.GetComponent<BoxCollider2D>().enabled = true;
             strawberry.GetComponent<StrawberryCollect>().state = 1;
+            strawberry.transform.position = transform.position;
             player.GetComponent<PlayerCollectables>().strawberries.Add(strawberry);
 
             //Update winged strawberry

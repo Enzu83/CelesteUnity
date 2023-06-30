@@ -69,6 +69,12 @@ public class DeathAndRespawn : MonoBehaviour
                     ball.GetComponent<BallAnimation>().angle = (float)i * Mathf.PI / 4;
                     ball.GetComponent<BallAnimation>().reverse = true;
                 }
+
+                //Refresh Winged Strawberry if they flew off
+                foreach (GameObject wingedStrawberry in GameObject.FindGameObjectsWithTag("Winged Strawberry"))
+                {
+                    wingedStrawberry.GetComponent<WingedStrawberry>().Refresh();
+                }
             }
 
             //Timer and end of death
