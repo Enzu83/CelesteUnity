@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 3653704112156688470}
   m_Layer: 3
   m_Name: MovingPlatform
-  m_TagString: Entity
+  m_TagString: Moving Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,7 +31,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3653704112156688430}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.84, y: -2.43, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3653704112767542732}
@@ -186,13 +186,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  moveSpeed: 12
-  boostFactor: 1.35
+  moveSpeed: 9
+  boostFactor: 1.5
   endPoint: {fileID: 3653704112767542723}
-  player: {fileID: 0}
+  player: {fileID: 4652625231893016452, guid: 66a6ea07c77a98b4892c36aba182bdee, type: 3}
   playerMask:
     serializedVersion: 2
     m_Bits: 1
+  playerJumped: 0
 --- !u!114 &3653704112156688470
 MonoBehaviour:
   m_ObjectHideFlags: 0

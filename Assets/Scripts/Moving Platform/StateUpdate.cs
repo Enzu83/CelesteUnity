@@ -17,7 +17,8 @@ public class StateUpdate : MonoBehaviour
     private BoxCollider2D coll;
 
     private int startingTimer;
-    private int waitEndTimer;
+    public int waitEndTimer;
+    public bool playerJumped = false;
 
     void Start()
     {
@@ -30,7 +31,6 @@ public class StateUpdate : MonoBehaviour
 
     void FixedUpdate()
     {
-
         //Update player's parent
         StickPlayerToPlatform();
 
@@ -106,39 +106,48 @@ public class StateUpdate : MonoBehaviour
                 startingTimer = 5;
             }
         }
-        else //Player isn't on the platform anymore
+        else
         {
-            //Velocity boost
-            if ((state == 1 || (state == 2 && waitEndTimer > 7)) && player.transform.parent == transform)
+            player.transform.SetParent(null);
+            playerJumped = false;
+        }
+        if (playerJumped) //Player isn't on the platform anymore
+        {
+            if (EjectPlayer())
             {
+                //Velocity boost
+
                 Rigidbody2D rbPlayer = player.GetComponent<Rigidbody2D>();
                 PlayerMovement playerMove = player.GetComponent<PlayerMovement>();
 
-                if (rbPlayer.velocity.y > playerMove.climbSpeed) //Apply boost only if player jumped off
+                if (playerMove.wallGrabbed)
                 {
-                    if (playerMove.wallGrabbed)
-                    {
-                        playerMove.wallGrabbed = false; //Jumping stops the player from grabbing the wall
-                        playerMove.isGrabbing = false; //Jumping ends grab
-                        playerMove.grabCooldownAfterJumpingFromWall = 10; //Time before a wall can be grabbed
+                    playerMove.wallGrabbed = false; //Jumping stops the player from grabbing the wall
+                    playerMove.isGrabbing = false; //Jumping ends grab
+                    playerMove.grabCooldownAfterJumpingFromWall = 10; //Time before a wall can be grabbed
 
-                        rbPlayer.velocity = new Vector2(0f, rbPlayer.velocity.y); //No horizontal speed when grabbing (before any boost)
-                    }
+                    rbPlayer.velocity = new Vector2(0f, rbPlayer.velocity.y); //No horizontal speed when grabbing (before any boost)
+                }
 
-                    playerMove.SetBoost(10, boostFactor * moveSpeed * direction, true);
+                playerMove.SetBoost(10, boostFactor * moveSpeed * direction + 5f * Vector2.up, true);
+                //player.transform.position = new Vector2(player.transform.position.x, player.transform.position.y) + 0.0625f * direction;
 
-                    if (rbPlayer.velocity.x > 0) //Update facing after boost
-                    {
-                        playerMove.facingLeft = false;
-                    }
-                    else
-                    {
-                        playerMove.facingLeft = true;
-                    }
+                if (rbPlayer.velocity.x > 0) //Update facing after boost
+                {
+                    playerMove.facingLeft = false;
+                }
+                else
+                {
+                    playerMove.facingLeft = true;
                 }
             }
-
             player.transform.SetParent(null);
+            playerJumped = false;
         }
+    }
+
+    public bool EjectPlayer()
+    {
+        return (Vector2.Distance(startPosition, transform.position) > .25f) && (state == 1 || (state == 2 && waitEndTimer > 10));
     }
 }

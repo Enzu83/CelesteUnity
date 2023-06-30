@@ -38,8 +38,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
     [SerializeField] private float maxVerticalSpeed = 20f;
-    [HideInInspector] public bool boostedVelocity = false;
-    [HideInInspector] public int boostedTimer = 0;
+    public bool boostedVelocity = false;
+    public int boostedTimer = 0;
     private bool keepVelocityAfterBoost = false;
     [HideInInspector] public float maxBoostedHorizontalSpeed;
     public float gravityScale;
@@ -164,14 +164,12 @@ public class PlayerMovement : MonoBehaviour
                     rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
                 }
             }
-            else if (boostedVelocity) //Horizontal Movement when player is boosted (e.g. by moving platform)
+            else if (boostedVelocity && boostedTimer == 0) //Horizontal Movement when player is boosted (e.g. by moving platform)
             {
                 if (IsGrounded() && !isWaveDashing)
                 {
                     boostedVelocity = false; //Reset boost
                     rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
-                    boostedTimer = 0;
-
                 }
                 else if (boostedTimer == 0 && dirX != 0) //Horizontal movement in the air
                 {
@@ -196,12 +194,36 @@ public class PlayerMovement : MonoBehaviour
 
         if (keyJump == KeyState.Down && IsGrounded() && !isDashing && !wallGrabbed && !slidingOnWall) //Jump detection
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            if (transform.parent != null)
+            {
+                GameObject obj = transform.parent.gameObject;
+                if (obj.CompareTag("Moving Platform")) //If the player is on a moving platform => doesn't jump but ejected
+                {
+                    StateUpdate state = obj.GetComponent<StateUpdate>();
+                    if (state.EjectPlayer())
+                    {
+                        state.playerJumped = true;
+                    }
+                    else //Normal jump
+                    {
+                        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
 
-            //Abort dash but horizontal speed is conserved
-            isDashing = false;
-            dashState = 0;
-            dashLeft = dashNumber;
+                        //Abort dash but horizontal speed is conserved
+                        isDashing = false;
+                        dashState = 0;
+                        dashLeft = dashNumber;
+                    }
+                }
+            }
+            else //Normal jump
+            {
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+
+                //Abort dash but horizontal speed is conserved
+                isDashing = false;
+                dashState = 0;
+                dashLeft = dashNumber;
+            }
         }
 
         if (rb.velocity.y < -maxVerticalSpeed) //Limit vertical speed
@@ -378,12 +400,36 @@ public class PlayerMovement : MonoBehaviour
 
                 if (keyJump == KeyState.Down) //Jumping while climbing
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, 0.85f * jumpForce);
-                    wallGrabbed = false; //Jumping stops the player from grabbing the wall
-                    isGrabbing = false; //Jumping ends grab
-                    grabCooldownAfterJumpingFromWall = 10; //Time before a wall can be grabbed
+                    if (transform.parent != null)
+                    {
+                        GameObject obj = transform.parent.gameObject;
+                        if (obj.CompareTag("Moving Platform")) //If the player is on a moving platform => doesn't jump but ejected
+                        {
+                            StateUpdate state = obj.GetComponent<StateUpdate>();
+                            if (state.EjectPlayer())
+                            {
+                                state.playerJumped = true;
+                            }
+                            else
+                            {
+                                rb.velocity = new Vector2(rb.velocity.x, 0.85f * jumpForce);
 
-                    staminaLeft -= 50f; //Stamina loss due to jumping
+                                wallGrabbed = false; //Jumping stops the player from grabbing the wall
+                                isGrabbing = false; //Jumping ends grab
+                                grabCooldownAfterJumpingFromWall = 10; //Time before a wall can be grabbed
+                                staminaLeft -= 50f; //Stamina loss due to jumping
+                            }
+                        }
+                    }
+                    else
+                    {
+                        rb.velocity = new Vector2(rb.velocity.x, 0.85f * jumpForce);
+
+                        wallGrabbed = false; //Jumping stops the player from grabbing the wall
+                        isGrabbing = false; //Jumping ends grab
+                        grabCooldownAfterJumpingFromWall = 10; //Time before a wall can be grabbed
+                        staminaLeft -= 50f; //Stamina loss due to jumping
+                    }
                 }
                 else if (Mathf.Abs(dirY) > .1f) //Check if going up or down
                 {

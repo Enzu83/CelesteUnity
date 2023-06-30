@@ -11,6 +11,7 @@ TagManager:
   - Screen
   - Cinemachine Camera
   - Winged Strawberry
+  - Moving Platform
   layers:
   - Default
   - TransparentFX
