@@ -97,7 +97,7 @@ public class StateUpdate : MonoBehaviour
             }
         }
         //Check landing
-        else if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.up, .0625f, playerMask) && player.GetComponent<PlayerMovement>().IsGrounded())
+        else if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.up, .0625f, playerMask) && player.GetComponent<PlayerMovement>().IsGrounded() && !wallGrabbed)
         {
             player.transform.SetParent(transform);
             if (state == 0)
@@ -129,20 +129,20 @@ public class StateUpdate : MonoBehaviour
                     rbPlayer.velocity = new Vector2(0f, rbPlayer.velocity.y); //No horizontal speed when grabbing (before any boost)
                 }
 
-                playerMove.SetBoost(10, boostFactor * moveSpeed * direction + 5f * Vector2.up, true);
+                playerMove.SetBoost(10, boostFactor * moveSpeed * direction + 5f * Vector2.up + new Vector2(rbPlayer.velocity.x, 0f), true);
                 //player.transform.position = new Vector2(player.transform.position.x, player.transform.position.y) + 0.0625f * direction;
 
                 if (rbPlayer.velocity.x > 0) //Update facing after boost
                 {
                     playerMove.facingLeft = false;
                 }
-                else
+                else if (rbPlayer.velocity.x < 0)
                 {
                     playerMove.facingLeft = true;
                 }
+                player.transform.SetParent(null);
+                playerJumped = false;
             }
-            player.transform.SetParent(null);
-            playerJumped = false;
         }
     }
 

@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 hitboxSize;
     private Vector2 halfBottomHitboxCenter = Vector2.zero;
     private Vector2 halfBottomHitboxSize = Vector2.zero;
-    private Vector2 squishedOffset = Vector2.zero;
+    public Vector2 squishedOffset = Vector2.zero;
     private Vector2 squishedLimit;
 
     public bool facingLeft = false;
@@ -708,7 +708,7 @@ public class PlayerMovement : MonoBehaviour
         //Vertical check
         if (Physics2D.BoxCast(hitboxCenter, hitboxSize - squishedOffset, 0f, Vector2.down, 0.0625f, wall) && Physics2D.BoxCast(hitboxCenter, hitboxSize - squishedOffset, 0f, Vector2.up, 0.0625f, wall))
         {
-            tempUpdatedOffset = Vector2.left;
+            tempUpdatedOffset = Vector2.up;
         }
 
         //Update squished offsets
@@ -721,19 +721,20 @@ public class PlayerMovement : MonoBehaviour
                 squishedOffset = new Vector2(squishedOffset.x - 0.0625f, squishedOffset.y);
             }
         }
-        else if (squishedOffset.x < squishedLimit.x)
-        {
-            squishedOffset = new Vector2(squishedOffset.x + 0.0625f, squishedOffset.y);
-        }
         else
         {
-            //Kill player
-            deathResp.dead = true; //Death trigger
-            rb.velocity = Vector2.zero;
-            rb.gravityScale = 0f; //Stop gravity
-
+            if (squishedOffset.x < squishedLimit.x)
+            {
+                squishedOffset = new Vector2(squishedOffset.x + 0.0625f, squishedOffset.y);
+            }
+            else
+            {
+                //Kill player
+                deathResp.dead = true; //Death trigger
+                rb.velocity = Vector2.zero;
+                rb.gravityScale = 0f; //Stop gravity
+            }
         }
-
         //Vertical offset
         if (tempUpdatedOffset.y == 0) //If no changes in offset, decrease it
         {
@@ -742,17 +743,19 @@ public class PlayerMovement : MonoBehaviour
                 squishedOffset = new Vector2(squishedOffset.x, squishedOffset.y - 0.0625f);
             }
         }
-        else if (squishedOffset.y < squishedLimit.y)
-        {
-            squishedOffset = new Vector2(squishedOffset.x, squishedOffset.y + 0.0625f);
-        }
         else
         {
-            //Kill player
-            deathResp.dead = true; //Death trigger
-            rb.velocity = Vector2.zero;
-            rb.gravityScale = 0f; //Stop gravity
-
+            if (squishedOffset.y < squishedLimit.y)
+            {
+                squishedOffset = new Vector2(squishedOffset.x, squishedOffset.y + 0.0625f);
+            }
+            else
+            {
+                //Kill player
+                deathResp.dead = true; //Death trigger
+                rb.velocity = Vector2.zero;
+                rb.gravityScale = 0f; //Stop gravity
+            }
         }
     }
 
