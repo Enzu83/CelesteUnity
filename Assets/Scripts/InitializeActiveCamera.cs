@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InitializeActiveCamera : MonoBehaviour
 {
-    private void Start()
+    public void Start()
     {
         foreach (GameObject screen in GameObject.FindGameObjectsWithTag("Screen"))
         {

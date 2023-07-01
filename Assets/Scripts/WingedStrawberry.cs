@@ -40,7 +40,7 @@ public class WingedStrawberry : MonoBehaviour
                 if (timer < 15)
                 {
                     //Move slightly up
-                    transform.position = Vector2.Lerp(transform.position, initialPosition + 2f * Vector2.up, 12f * Time.deltaTime);
+                    transform.position = Vector2.Lerp(transform.position, initialPosition + 1.75f * Vector2.up, 12f * Time.deltaTime);
 
                     //Oscillation animation
                     transform.localEulerAngles = new Vector3(0f, 0f, -30f * Mathf.Cos(Mathf.PI / 7 * timer));

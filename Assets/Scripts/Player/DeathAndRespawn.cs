@@ -61,6 +61,7 @@ public class DeathAndRespawn : MonoBehaviour
                 rb.velocity = Vector2.zero; //Stop velocity
                 GetComponent<PlayerMovement>().dashLeft = GetComponent<PlayerMovement>().dashNumber; //Reset dash
                 GetComponent<PlayerMovement>().staminaLeft = GetComponent<PlayerMovement>().maxStamina; //Reset stamina
+                GetComponent<PlayerMovement>().ResetDashAndGrab();
                 GetComponent<Animator>().SetBool("dead", false); //Death animation state
                 GetComponent<BoxCollider2D>().enabled = true; //Reactive hitbox after respawn
                 for (int i = 0; i < 8; i++) //Create ball but reverse
@@ -75,6 +76,9 @@ public class DeathAndRespawn : MonoBehaviour
                 {
                     wingedStrawberry.GetComponent<WingedStrawberry>().Refresh();
                 }
+
+                //Reset camera
+                GetComponent<InitializeActiveCamera>().Start();
             }
 
             //Timer and end of death

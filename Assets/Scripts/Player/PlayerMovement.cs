@@ -550,30 +550,28 @@ public class PlayerMovement : MonoBehaviour
                     isWaveDashing = true;
                 }
                 //Wallbounce check (wall on the left) - only if dash is up
-                else if (dashDirection == Vector2.up && keyJump == KeyState.Down && Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, Vector2.left, .2f, wall))
+                else if (dashDirection == Vector2.up && keyJump == KeyState.Down && Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, Vector2.left, .5f, wall))
                 {
                     isDashing = false;
                     dashState = 0;
                     facingLeft = false;
                     wallBouncing = true;
 
-                    SetBoost(8, dashSpeed * new Vector2(0.5f, 1.2f), true);
+                    SetBoost(8, dashSpeed * new Vector2(0.53f, 1.2f), true);
                 }
                 //Wallbounce check (wall on the right) - only if dash is up
-                else if (dashDirection == Vector2.up && keyJump == KeyState.Down && Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, Vector2.right, .2f, wall))
+                else if (dashDirection == Vector2.up && keyJump == KeyState.Down && Physics2D.BoxCast(halfBottomHitboxCenter, halfBottomHitboxSize, 0f, Vector2.right, .5f, wall))
                 {
                     isDashing = false;
                     dashState = 0;
                     facingLeft = true;
                     wallBouncing = true;
 
-                    SetBoost(8, dashSpeed * new Vector2(-0.5f, 1.2f), true);
+                    SetBoost(8, dashSpeed * new Vector2(-0.53f, 1.2f), true);
                 }
                 //Update dash direction if hitting a wall
                 else
                 {
-
-
                     if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, dashDirection.x * Vector2.right, .1f, wall)) //Check if a wall is in the X-direction
                     {
                         rb.velocity = new Vector2(0f, rb.velocity.y); //Stop horizontal movement if hitting a wall

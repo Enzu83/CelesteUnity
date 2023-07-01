@@ -31,8 +31,7 @@ I need to build the level design and I'm done for !!!
 
 ## To do list
 
-- Make all the screens of Forsaken City - 4/37
-- Wallbounce should be possible even if no horizontal inputs have been made
+- Make all the screens of Forsaken City - 5/37
 
 
 ## Side notes
