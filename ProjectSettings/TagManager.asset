@@ -49,6 +49,9 @@ TagManager:
   - name: Background
     uniqueID: 2727325507
     locked: 0
+  - name: Moving Platform
+    uniqueID: 2946790699
+    locked: 0
   - name: Phantom
     uniqueID: 80716673
     locked: 0

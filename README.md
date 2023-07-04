@@ -31,7 +31,7 @@ I need to build the level design and I'm done for !!!
 
 ## To do list
 
-- Make all the screens of Forsaken City - 5/37
+- Make all the screens of Forsaken City - 6/37
 
 
 ## Side notes
