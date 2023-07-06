@@ -32,6 +32,7 @@ I need to build the level design and I'm done for !!!
 ## To do list
 
 - Make all the screens of Forsaken City - 6/37
+- Problems with Moving Platform : Sometimes (in the last screen for instance) the player is not ejected & player is crushed when dashing horizontally towards a moving platform which moves in the opposite direction
 
 
 ## Side notes

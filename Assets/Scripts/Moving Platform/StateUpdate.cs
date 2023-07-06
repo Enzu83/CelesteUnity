@@ -115,6 +115,7 @@ public class StateUpdate : MonoBehaviour
         {
             if (EjectPlayer())
             {
+                Debug.Log("ejected");
                 //Velocity boost
 
                 Rigidbody2D rbPlayer = player.GetComponent<Rigidbody2D>();
