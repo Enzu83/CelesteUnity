@@ -76,7 +76,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1348176597
-  m_SortingLayer: -3
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: e4b6d5da5d975604dbbc8cc630c638cf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -173,6 +173,7 @@ MonoBehaviour:
   trafficLight: {fileID: 212938253516641980, guid: 31fab126f565ed04ba2a353da24eb053, type: 3}
   railObject: {fileID: 8752025766034733691, guid: bf5f29c566a9d7648a92d939f610ff5b, type: 3}
   railWheel: {fileID: 718593935578999954, guid: 6fd5839fede6fc042a0f388a128c64d8, type: 3}
+  trafficLightOffset: 0.5
 --- !u!114 &3653704112156688469
 MonoBehaviour:
   m_ObjectHideFlags: 0

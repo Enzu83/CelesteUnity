@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float waveDashFactor;
     [SerializeField] private bool isWaveDashing = false;
     [SerializeField] private GameObject phantomMadeline;
-    private Vector2 dashDirection = Vector2.zero;
+    [HideInInspector] public Vector2 dashDirection = Vector2.zero;
     public int dashState = 0;
     [HideInInspector] public int dashLeft;
     [HideInInspector] public bool isDashing = false;

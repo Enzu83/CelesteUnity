@@ -43,7 +43,8 @@ public class CollapsingPlatformTiles : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.up, .1f, playerMask) && !Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.zero, .1f, playerMask) && collapsingState == 0)
+
+        if (Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.up, .1f, playerMask) && !Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.zero, .1f, playerMask) && player.GetComponent<PlayerMovement>().IsGrounded() && collapsingState == 0)
         {
             collapsingState = 1; //Start collapsing
 

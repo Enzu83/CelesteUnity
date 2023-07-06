@@ -11,6 +11,7 @@ public class InitializeRail : MonoBehaviour
     [SerializeField] private GameObject trafficLight;
     [SerializeField] private GameObject railObject;
     [SerializeField] private GameObject railWheel;
+    public float trafficLightOffset;
 
     void Start()
     {

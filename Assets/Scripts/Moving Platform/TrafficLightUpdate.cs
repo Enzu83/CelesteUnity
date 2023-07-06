@@ -8,10 +8,7 @@ public class TrafficLightUpdate : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-
-        //Position offset
-        float parentSizeY = GetComponentInParent<SpriteRenderer>().size.y;
-        float offset = -parentSizeY / 2 + 2 * 0.0625f + GetComponent<SpriteRenderer>().size.y / 2;
+        float offset = GetComponentInParent<InitializeRail>().trafficLightOffset;
 
         transform.position = new Vector2(transform.position.x, transform.position.y + offset);
     }
