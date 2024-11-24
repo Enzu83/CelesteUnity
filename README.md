@@ -1,12 +1,14 @@
-# CelesteUnity
+# Celeste in Unity
  
-Making Celeste as a first project on Unity (don't expect much)
+Making Celeste as a first project in Unity.\
 \
-My objective is to make Forsaken City entirely.
-I think I'm close to make it because I have finished all the mechanics of the level and made screen transitions.
-I need to build the level design and I'm done for !!!
+My objective is to make Forsaken City entirely.\
+I have finished all the gameplay mechanics and made screen transitions.\
+The only part missing is the level design.
 
-### So far...
+[![Celeste Demo](https://img.youtube.com/vi/AIupwKc8UzM/0.jpg)](https://www.youtube.com/watch?v=AIupwKc8UzM)
+
+## Gameplay mechanics
 - Basic Movement
 - Dash
 - Wavedash
@@ -27,13 +29,6 @@ I need to build the level design and I'm done for !!!
 - One Way Platform
 - Screen Transitions
 - Winged Strawberry
-
-
-## To do list
-
-- Make all the screens of Forsaken City - 6/37
-- Problems with Moving Platform : Sometimes (in the last screen for instance) the player is not ejected & player is crushed when dashing horizontally towards a moving platform which moves in the opposite direction
-
 
 ## Side notes
 
