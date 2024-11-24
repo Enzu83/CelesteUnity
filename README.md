@@ -1,10 +1,12 @@
 # Celeste in Unity
  
-Making Celeste as a first project in Unity.\
-\
+Making Celeste as a first project in Unity.
+
 My objective is to make Forsaken City entirely.\
 I have finished all the gameplay mechanics and made screen transitions.\
 The only part missing is the level design.
+
+Click below to see the demo :
 
 [![Celeste Demo](https://img.youtube.com/vi/AIupwKc8UzM/0.jpg)](https://www.youtube.com/watch?v=AIupwKc8UzM)
 
